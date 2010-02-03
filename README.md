@@ -6,7 +6,7 @@ Sage is a scala API for manipulating the App Engine datastore. Is it *heavily* i
   [1]: http://github.com/szeiger/scala-query
 
 Installing
-==========
+----------
 
 1. Your project must be built with 2.8.Beta1-RC8 or later
 2. Clone this project and run the following from within the sage project directory: 
@@ -19,7 +19,7 @@ Installing
         val sage = "prohax" % "sage" % "0.1"
 
 Getting Started
-===============
+---------------
 
 The api is definitely not locked down right now, so the best place to learn how to use it is to read the specs.
 
