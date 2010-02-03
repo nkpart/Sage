@@ -18,10 +18,9 @@ class ExampleSuite extends FunSuite with ShouldMatchers with BeforeAndAfterAll w
       def * = "type".prop[String]
     }
     
-    val r: (Key, String) = hats << ("slouch")
+    val r: Keyed[String] = hats << ("slouch")
     
-    val e: Entity = datastoreService.get(r._1)
-    println(e)
+    val e: Entity = datastoreService.get(r.key)
     e.getProperty("type") should equal ("slouch")
   }
 
@@ -33,8 +32,7 @@ class ExampleSuite extends FunSuite with ShouldMatchers with BeforeAndAfterAll w
     
     val r = hats << ("flatcap", 25)
     
-    val e: Entity = datastoreService.get(r._1)
-    println(e)
+    val e: Entity = datastoreService.get(r.key)
     e.getProperty("type") should equal ("flatcap")
     e.getProperty("price") should equal (25)
   }
@@ -51,7 +49,7 @@ class ExampleSuite extends FunSuite with ShouldMatchers with BeforeAndAfterAll w
     val hat = (Name("bowler"), Price(50))
     val r = hats << hat
  
-    hats.lookup(r._1.getId) should equal (Some(hat))
+    hats.lookup(r.key.getId) map (_.value) should equal (Some(hat))
   }
   
   case class Hat(name: String, price: Price)
@@ -63,7 +61,7 @@ class ExampleSuite extends FunSuite with ShouldMatchers with BeforeAndAfterAll w
     val hat = Hat("fedora", Price(65))
     val r = hats << hat
 
-    hats.lookup(r._1.getId) should equal (Some(hat))
+    hats.lookup(r.key.getId) map (_.value) should equal (Some(hat))
   }
   
   test("newtypes as props like this") {
@@ -74,7 +72,7 @@ class ExampleSuite extends FunSuite with ShouldMatchers with BeforeAndAfterAll w
     val hat = Hat("fedora", Price(65))
     val r = hats << hat
 
-    hats.lookup(r._1.getId) should equal (Some(hat))
+    hats.lookup(r.key.getId) map (_.value) should equal (Some(hat))
   }
   
   test("write many") {
@@ -82,7 +80,7 @@ class ExampleSuite extends FunSuite with ShouldMatchers with BeforeAndAfterAll w
       def * =  "type".prop[String] ~ Price <> (Hat, Hat.unapply _)
     }
     val newHats = List(Hat("a", Price(1)), Hat("b", Price(2)))
-    val keys = hats <<++ newHats map (_._1)
-    keys map (k => hats.lookup(k.getId).get) should equal (newHats)
+    val keys = hats <<++ newHats map (_.key)
+    keys map (k => hats.lookup(k.getId).get.value) should equal (newHats)
   }
 }

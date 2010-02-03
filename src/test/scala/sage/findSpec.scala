@@ -22,7 +22,7 @@ class FindSuite extends FunSuite with ShouldMatchers with BeforeAndAfterAll with
   test("find something") {
     import dsl._
     val newHats = List(Hat("a", 1), Hat("b", 2))
-    val keys = Hats <<++ newHats map (_._1)
+    val keys = Hats <<++ newHats map (_.key)
     
     val hatsNamedA = Hats.find.query("type" ?== "a").iterable
     

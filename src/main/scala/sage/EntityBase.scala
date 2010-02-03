@@ -9,21 +9,20 @@ trait EntityBase[T] {
   val kind: String
   def * : Property[T]
   
-  def <<(t: T)(implicit ds: DatastoreService): (Key, T) = {
+  def <<(t: T)(implicit ds: DatastoreService): Keyed[T] = {
     val e = asEntity(t)
-    (ds.put(e), t)
+    Keyed(ds.put(e), t)
   }
   
-  def <<++(ts: Seq[T])(implicit ds: DatastoreService): Iterable[(Key,T)] = {
+  def <<++(ts: Seq[T])(implicit ds: DatastoreService): Iterable[Keyed[T]] = {
     val es = ts map asEntity
     val keys: Iterable[Key] = ds.put(asIterable(es))
-    keys zip ts
+    keys zip ts map ((k:Key, b:T) => Keyed(k,b)).tupled
   }
   
-  def lookup(id: Long)(implicit ds: DatastoreService): Option[T] = {
-    (() => ds.get(KeyFactory.createKey(kind, id))).throws.success >>= { e =>
-      read(e)
-    }
+  def lookup(id: Long)(implicit ds: DatastoreService): Option[Keyed[T]] = {
+    val got = (() => ds.get(KeyFactory.createKey(kind, id))).throws.success
+    for (entity <- got; t <- read(entity)) yield (Keyed(entity.getKey, t))
   }
   
   def find: Find[T] = Find(this)

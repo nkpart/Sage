@@ -1,0 +1,8 @@
+
+Beers.childrenOf(brewery.key)
+
+def insertWithParent(parentKey: Key, ds: DatastoreService)(implicit ew: EntityWriteable[T], stored: EntityBase[T]): Keyed[T] = {
+  val newKey = ds.put(entity(value,value, Some(parentKey)))
+  Keyed(value, newKey)
+}
+
