@@ -9,6 +9,8 @@ package object brotable {
       val delegate = prop[U]
       
       def get(e: Entity) = delegate.get(e) map (u => f(u))
+        
+      
       def put(t: T, e: Entity) = delegate.put(t.value, e)
     }
     

@@ -8,7 +8,7 @@ trait EntityBase[T] {
   val kind: String
   def * : Property[T]
   
-  def insert(t: T)(implicit ds: DatastoreService): (Key, T) = {
+  def <<(t: T)(implicit ds: DatastoreService): (Key, T) = {
     val e = new Entity(kind)
     write(t, e)
     (ds.put(e), t)
