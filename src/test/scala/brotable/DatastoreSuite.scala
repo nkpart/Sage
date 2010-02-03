@@ -1,4 +1,4 @@
-package brotable
+package sage
 
 import com.google.appengine.api.datastore._
 import dev.LocalDatastoreService

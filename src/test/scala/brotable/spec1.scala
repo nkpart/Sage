@@ -1,4 +1,4 @@
-package brotable
+package sage
 
 import scalaz._
 import Scalaz._
@@ -13,10 +13,7 @@ import java.lang.{Long => JLong}
 
 class ExampleSuite extends FunSuite with ShouldMatchers with BeforeAndAfterAll with DatastoreSuite {
   
-  test("It should look a little bit like this") {
-
-    
-    
+  test("It should look a little bit like this") {    
     val hats = new Base[String]("hats") {
       def * = "type".prop[String]
     }
@@ -62,9 +59,30 @@ class ExampleSuite extends FunSuite with ShouldMatchers with BeforeAndAfterAll w
     object hats extends Base[Hat]("hats") {
       def * = "type".prop[String] ~ "price".typedProp(Price) <> (Hat, Hat.unapply _)
     }
+    
     val hat = Hat("fedora", Price(65))
     val r = hats << hat
-    
+
     hats.lookup(r._1.getId) should equal (Some(hat))
+  }
+  
+  test("newtypes as props like this") {
+    object hats extends Base[Hat]("hats") {
+      def * = "type".prop[String] ~ Price <> (Hat, Hat.unapply _)
+    }
+    
+    val hat = Hat("fedora", Price(65))
+    val r = hats << hat
+
+    hats.lookup(r._1.getId) should equal (Some(hat))
+  }
+  
+  test("write many") {
+    object hats extends Base[Hat]("hats") {
+      def * =  "type".prop[String] ~ Price <> (Hat, Hat.unapply _)
+    }
+    val newHats = List(Hat("a", Price(1)), Hat("b", Price(2)))
+    val keys = hats <<++ newHats map (_._1)
+    keys map (k => hats.lookup(k.getId).get) should equal (newHats)
   }
 }

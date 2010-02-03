@@ -2,7 +2,11 @@ import scalaz._
 import Scalaz._
 import com.google.appengine.api.datastore._
 
-package object brotable {  
+package object sage {  
+  implicit def newtypeProp[T <: AnyRef, U <: NewType[T]](f: T => U)(implicit m: ClassManifest[U], tm: ClassManifest[T]): P1[U] = {
+    stringProp(m.erasure.getSimpleName.toLowerCase).typedProp[U, T](f)
+  }
+  
   implicit def stringProp(s: String) = new {
     
     def typedProp[T <: NewType[U], U <: AnyRef](f: U => T)(implicit m: ClassManifest[U]) = new P1[T] {

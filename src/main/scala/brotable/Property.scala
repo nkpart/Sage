@@ -1,4 +1,4 @@
-package brotable
+package sage
 
 import scalaz._
 import Scalaz._
