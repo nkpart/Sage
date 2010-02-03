@@ -4,9 +4,10 @@ import com.google.appengine.api.datastore._
 import scalaz._
 import Scalaz._
 
-trait Keyed[T] {
-  val key: Key
-  val value: T
+case class Keyed[T](
+  key: Key,
+  value: T
+) {
   
   // TODO: move this onto Query
 //  def children[T](ds: DatastoreService)(implicit ec: EntityCreatable[T], k: Kind[T]): Iterable[Keyed[T]] = {
@@ -14,6 +15,3 @@ trait Keyed[T] {
 //  }
 }
 
-object Keyed {
-  def apply[T](k: Key, t: T) = new Keyed[T] { val value = t; val key = k}
-}

@@ -10,8 +10,8 @@ case class Find[T](base: EntityBase[T], q: Query, fo: FetchOptions) {
 
   def fetch(f: FetchOptions => FetchOptions): Find[T] = this copy (fo = f(fo))
 
-  def iterable(implicit ds: DatastoreService): Iterable[(Key, T)] = 
-    ds.prepare(q).asIterable(fo) flatMap (e => base.read(e) map (t => (e.getKey, t)))
+  def iterable(implicit ds: DatastoreService): Iterable[Keyed[T]] = 
+    ds.prepare(q).asIterable(fo) flatMap (e => base.read(e) map (t => Keyed(e.getKey, t)))
 }
 
 private[sage] object Find {

@@ -5,7 +5,6 @@ import Scalaz._
 
 import org.scalatest._
 import org.scalatest.matchers.ShouldMatchers
-import scala.collection.mutable.Stack
 
 import com.google.appengine.api.datastore._
 
