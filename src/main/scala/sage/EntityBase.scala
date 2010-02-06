@@ -7,7 +7,7 @@ import scala.collection.JavaConversions._
 
 trait EntityBase[T] {
   val kind: String
-  def * : Property[T]
+  def * : Property[T, Entity]
   
   def <<(t: T)(implicit ds: DatastoreService): Keyed[T] = {
     val e = freshEntity(t)
@@ -42,7 +42,7 @@ trait EntityBase[T] {
   def find: Find[T] = Find(this)
   
   def write(t: T, e: Entity): Entity = this.* put (t, e)
-  def read(m: Entity): Option[T] = this.* get (m)
+  def read(m: Entity): Option[T] = this.*.get(m).success
   
   def keyedEntity(t: T, key: Key): Entity = write(t, new Entity(key))
   def freshEntity(t: T) = write(t, new Entity(kind))  
