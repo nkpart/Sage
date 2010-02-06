@@ -22,6 +22,6 @@ class PropertySuite extends FunSuite with ShouldMatchers with BeforeAndAfterAll 
     abProp.get(e) assert_≟ failure("a" +>: nel1("b"))
   
     e.setProperty("a", "aValue")
-    abProp.get(e) assert_≟ failure("b".wrapNel)    
+    abProp.get(e) assert_≟ failure("b".wrapNel)
   }
 }

@@ -9,13 +9,13 @@ trait Property[T, V] {
   def put(t: T, e: V): Entity
 }
 
-case class MappedProperty[T, P](f: P => T, g: T => Option[P], parent: Property[P, Entity]) extends Property[T, Entity] {
-  def get(e: Entity): Validation[NonEmptyList[String], T] = parent.get(e) map f
-  def put(t: T, e: Entity) = parent.put(g(t).get, e)
+case class MappedProperty[T, P, Src](f: P => T, g: T => Option[P], parent: Property[P, Src]) extends Property[T, Src] {
+  def get(e: Src): Validation[NonEmptyList[String], T] = parent.get(e) map f
+  def put(t: T, e: Src) = parent.put(g(t).get, e)
 }
 
 trait P1[A] extends Property[A, Entity] {  
-  def <>[Z](f: (A => Z), g: (Z => Some[A])) = MappedProperty[Z, A](f, g, this)
+  def <>[Z](f: (A => Z), g: (Z => Some[A])) = MappedProperty[Z, A, Entity](f, g, this)
   
   def ~[B](prop: P1[B]) = new P2[A,B] {
     def get(e: Entity) = P1.this.get(e) <|*|> prop.get(e)
@@ -25,11 +25,11 @@ trait P1[A] extends Property[A, Entity] {
 }
 
 trait P2[A, B] extends Property[(A, B), Entity] {
-  def <>[Z](f: ((A, B) => Z), g: (Z => Some[(A, B)])) = MappedProperty[Z, (A,B)](f.tupled, g, this)
+  def <>[Z](f: ((A, B) => Z), g: (Z => Some[(A, B)])) = MappedProperty[Z, (A,B), Entity](f.tupled, g, this)
 }
 
 trait P3[A, B, C] extends Property[(A, B, C), Entity] {
-  def <>[Z](f: ((A, B, C) => Z), g: (Z => Some[(A, B, C)])) = MappedProperty[Z, (A, B, C)](f.tupled, g, this)
+  def <>[Z](f: ((A, B, C) => Z), g: (Z => Some[(A, B, C)])) = MappedProperty[Z, (A, B, C), Entity](f.tupled, g, this)
 }
 
 
