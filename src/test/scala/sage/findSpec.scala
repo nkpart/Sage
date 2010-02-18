@@ -10,12 +10,12 @@ import com.google.appengine.api.datastore._
 
 import java.lang.{Long => JLong}
 
-class FindSuite extends FunSuite with ShouldMatchers with BeforeAndAfterAll with DatastoreSuite {
+class FindSuite extends SageSuiteBase {
   
   case class Hat(name: String, price: JLong)
   
   object Hats extends Base[Hat]("hats") {
-    def * =  "type".prop[String] ~ "price".prop[JLong] <> (Hat, Hat.unapply _)
+    def * =  "type".prop[String] :: "price".prop[JLong]  >< (Hat <-> Hat.unapply _)
   }
   
   test("find something") {

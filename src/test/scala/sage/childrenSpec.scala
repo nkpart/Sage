@@ -8,7 +8,7 @@ import com.google.appengine.api.datastore._
 
 import java.lang.{Long => JLong}
 
-class ChildrenOfSuite extends FunSuite with ShouldMatchers with BeforeAndAfterAll with DatastoreSuite {
+class ChildrenOfSuite extends SageSuiteBase {
   
   case class Hat(name: String, price: JLong)
   
@@ -17,7 +17,7 @@ class ChildrenOfSuite extends FunSuite with ShouldMatchers with BeforeAndAfterAl
   }
   
   object Hats extends Base[Hat]("hats") {
-    def * =  "type".prop[String] ~ "price".prop[JLong] <> (Hat, Hat.unapply _)
+    def * =  "type".prop[String] :: "price".prop[JLong] >< (Hat <-> Hat.unapply _)
   }
   
   test("can insert with parent") {

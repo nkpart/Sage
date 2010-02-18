@@ -5,7 +5,10 @@ import dev.LocalDatastoreService
 import com.google.appengine.tools.development.ApiProxyLocalImpl
 import com.google.apphosting.api.ApiProxy
 
-import org.scalatest.BeforeAndAfterAll
+import org.scalatest._
+import org.scalatest.matchers.ShouldMatchers
+
+trait SageSuiteBase extends FunSuite with ShouldMatchers with BeforeAndAfterAll with DatastoreSuite
 
 trait DatastoreSuite {
   self: BeforeAndAfterAll =>

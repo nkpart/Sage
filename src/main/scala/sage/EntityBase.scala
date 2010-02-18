@@ -1,5 +1,6 @@
 package sage
 
+import props._
 import scalaz._
 import Scalaz._
 import com.google.appengine.api.datastore._
@@ -7,7 +8,7 @@ import scala.collection.JavaConversions._
 
 trait EntityBase[T] {
   val kind: String
-  def * : Property[T, Entity]
+  def * : Property[Entity, T]
   
   def <<(t: T)(implicit ds: DatastoreService): Keyed[T] = {
     val e = freshEntity(t)

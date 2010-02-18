@@ -5,7 +5,6 @@ import scalaz._
 import Scalaz._
 
 case class Find[T](base: EntityBase[T], q: Query, fo: FetchOptions) {  
-    
   def query(f: Query => Query): Find[T] = this copy (q = f(q))
 
   def fetch(f: FetchOptions => FetchOptions): Find[T] = this copy (fo = f(fo))
