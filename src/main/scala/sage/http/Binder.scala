@@ -1,4 +1,4 @@
-package scalaz
+package sage
 package http
 
 import scalaz.http.request._
@@ -18,12 +18,13 @@ trait Postable[T] {
   def read(str: String): Option[T]
 }
 
-object StringW {
-  def postable[T](f: String => Option[T]) = new Postable[T] { def read(str: String) = f(str) }
-  
+object Postable {
   implicit val string = postable[String](s => some(s))
+  def postable[T](f: String => Option[T]) = new Postable[T] { def read(str: String) = f(str) }
 }
 
-trait Binder {
-  
+object StringW {
+  implicit def to(s: String) = new StringW { val str = s }
+  implicit def from(sw: StringW) = sw.str
 }
+

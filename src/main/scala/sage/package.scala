@@ -10,6 +10,4 @@ package object sage extends
   with FunctionWs 
   with FindDSLImplicits 
   with EntityProperties 
-  with PropsBase {
-    val End = props.End
-}
+  with PropsBase 

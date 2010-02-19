@@ -8,6 +8,7 @@ import metascala.Nats._
 trait FunctionWs {
   implicit def pimp1[A, Z](f: A => Z) = new {
     def m: A :: HNil => Z = list => f(list.nth[_0])
+    def <->(unapply: Z => Option[A]) = (m, (z: Z) => unapply(z).get :: HNil )
   }
   
   implicit def pimp2[A, B, Z](f: (A, B) => Z) = new {

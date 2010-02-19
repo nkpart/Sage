@@ -31,11 +31,3 @@ package object props extends PropsBase with MAs {
     )
   }
 }
-
-package props {
-  // DSL Helper, terminates a defined list of properties
-  case object End {
-    def ::[M[_] : InvariantFunctor, T](mt: M[T]): M[HCons[T, HNil]] = 
-      (mt: MA[M, T]).xmap(v => HCons(v, HNil), (xs: HCons[T, HNil]) => xs.head)
-  }
-}
