@@ -22,11 +22,12 @@ class RequestSpec extends SageSuiteBase {
     val line = Line.line(GET, Uri.uri("/abc".charsNel.get, some("name=nick".toList)), Version.version11)    
     val request = Request.request(line, Nil, Stream.empty)
     
-    println(nameProp.get(request))
-    println(nameAndAgeProp.get(request))
+    nameProp.get(request).success.map(_.name) assert_≟ (some("nick"))
+    nameAndAgeProp.get(request).failure assert_≟ (some(nel("age", "song" :: Nil)))
+    
   }
   
-  test("b") {
-    
+  test("missing vs. invalid data") {
+    val nameAndAgeProp = "name".as[String] :: "age".as[Int]
   }
 }

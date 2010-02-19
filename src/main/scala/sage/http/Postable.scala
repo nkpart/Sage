@@ -19,8 +19,10 @@ trait Postable[T] {
 }
 
 object Postable {
-  implicit val string = postable[String](s => some(s))
   def postable[T](f: String => Option[T]) = new Postable[T] { def read(str: String) = f(str) }
+  
+  implicit val string = postable[String](s => some(s))
+  implicit val int = postable[Int](s => s.parseInt.success)
 }
 
 object StringW {
