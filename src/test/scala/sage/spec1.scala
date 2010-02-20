@@ -62,7 +62,7 @@ class ExampleSuite extends SageSuiteBase {
   test("Newtyped properties like this") {
 
     object hats extends Base[Name :: Price :: HNil]("hats") {
-      def * = "type".typedProp(Name) :: "price".typedProp(Price) 
+      def * = "type".typedProp(Name) :: Price.prop 
     }
     
     val hat = Name("bowler") :: Price(50) :: HNil
@@ -75,7 +75,7 @@ class ExampleSuite extends SageSuiteBase {
   case class Hat(name: String, price: Price)
   test("Saving classes like this") {
     object hats extends Base[Hat]("hats") {
-      def * = "type".prop[String] :: "price".typedProp(Price)  >< (Hat <-> Hat.unapply _)
+      def * = "type".prop[String] :: Price.prop  >< (Hat <-> Hat.unapply _)
     }
     
     val hat = Hat("fedora", Price(65))
@@ -86,7 +86,7 @@ class ExampleSuite extends SageSuiteBase {
   
   test("newtypes as props like this") {
     object hats extends Base[Hat]("hats") {
-      def * = "type".prop[String] :: "price".typedProp(Price)  >< (Hat <-> Hat.unapply _)
+      def * = "type".prop[String] :: Price.prop  >< (Hat <-> Hat.unapply _)
     }
     
     val hat = Hat("fedora", Price(65))
@@ -97,7 +97,7 @@ class ExampleSuite extends SageSuiteBase {
   
   test("write many") {
     object hats extends Base[Hat]("hats") {
-      def * =  "type".prop[String] :: "price".typedProp(Price)  >< (Hat <-> Hat.unapply _)
+      def * =  "type".prop[String] :: Price.prop  >< (Hat <-> Hat.unapply _)
     }
     val newHats = List(Hat("a", Price(1)), Hat("b", Price(2)))
     val keys = hats <<++ newHats map (_.key)
