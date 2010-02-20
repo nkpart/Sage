@@ -1,5 +1,6 @@
 package sage
 
+import props._
 import scalaz._
 import Scalaz._
 import org.scalatest._
@@ -13,10 +14,10 @@ class PropertySuite extends SageSuiteBase {
     val abProp = "a".prop[String] :: "b".prop[String] 
     
     val e = new Entity("some_kind")
-    abProp.get(e).failure assert_≟ Some("a" +>: nel1("b"))
+    abProp.get(e).failure.map(_.list) should equal (some(missing("a") :: missing("b") :: nil))
   
     e.setProperty("a", "aValue")
-    abProp.get(e).failure assert_≟ Some("b".wrapNel)
+    abProp.get(e).failure.map(_.list) should equal (some(missing("b") :: Nil))
   }
   
   test("properties type check") {
@@ -24,9 +25,9 @@ class PropertySuite extends SageSuiteBase {
     val e = new Entity("someKind")
     
     e.setProperty("a", 50l)
-    abProp.get(e).failure assert_≟ Some("a".wrapNel)
+    abProp.get(e).failure.map(_.list) should equal (some((missing("a") :: Nil)))
     
     e.setProperty("a", "value")
-    abProp.get(e).failure assert_≟ none
+    abProp.get(e).failure should equal (none)
   }
 }

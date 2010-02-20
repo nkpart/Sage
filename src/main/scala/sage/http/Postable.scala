@@ -8,8 +8,9 @@ import Scalaz._
 trait StringW {
   val str: String
   
+  import props._
   def as[T](implicit p: Postable[T]) = props.Property[Request[Stream], T](
-    r => ((r |! str) map (_.mkString) >>= (p.read _)).toSuccess(str.wrapNel),
+    r => (r |! str).map(_.mkString).toSuccess(missing(str).wrapNel) >>= (v => p.read(v).toSuccess(invalid(str).wrapNel)),
     (t, r) => error("cannot write to requests")
   )
 }

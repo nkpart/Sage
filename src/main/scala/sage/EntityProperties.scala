@@ -17,7 +17,7 @@ trait EntityProperties {
   } 
   
   def forString[T : ClassManifest](s: String): Property[Entity, T] = new Property[Entity, T] {
-    def get(e: Entity) = e.property[T](s).toSuccess(s.wrapNel)
+    def get(e: Entity) = e.property[T](s).toSuccess(missing(s).wrapNel)
     
     def put(t: T, e: Entity) = {
       e.setProperty(s, t)
