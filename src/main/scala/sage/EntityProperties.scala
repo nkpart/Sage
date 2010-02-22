@@ -6,7 +6,7 @@ import Scalaz._
 import com.google.appengine.api.datastore._
 
 object EntityPropBuilders {
-  def string[T : ClassManifest](s: String): Property[Entity, T] = new Property[Entity, T] {
+  def string[T : ClassManifest](s: String): ReadWrite[Entity, T] = new ReadWrite[Entity, T] {
     def get(e: Entity) = e.property[T](s).toSuccess(missing(s).wrapNel)
     
     def put(t: T, e: Entity) = {
@@ -21,7 +21,7 @@ object EntityPropBuilders {
 
 trait StringW {
   val s: String
-  def typedProp[T, U <: NewType[T]](f: T => U)(implicit m: ClassManifest[T]): Property[Entity, U] = 
+  def typedProp[T, U <: NewType[T]](f: T => U)(implicit m: ClassManifest[T]): ReadWrite[Entity, U] = 
     EntityPropBuilders.newType[T, U](s, f)
   
   def prop[T : ClassManifest] = EntityPropBuilders.string[T](s) 

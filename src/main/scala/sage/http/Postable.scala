@@ -1,18 +1,23 @@
 package sage
 package http
 
+import props._
 import scalaz.http.request._
 import scalaz._
 import Scalaz._
+
+import metascala.HLists._
 
 trait StringW {
   val str: String
   
   import props._
-  def as[T](implicit p: Postable[T]) = props.Property[Request[Stream], T](
-    r => (r |! str).map(_.mkString).toSuccess(missing(str).wrapNel) >>= (v => p.read(v).toSuccess(invalid(str).wrapNel)),
-    (t, r) => error("cannot write to requests")
-  )
+  
+  def as[T](implicit p: Postable[T]) = new ReadUpdate[Request[Stream], T] {
+    def get(r: Request[Stream]) = (r |! str).map(_.mkString).toSuccess(missing(str).wrapNel) >>= (v => p.read(v).toSuccess(invalid(str).wrapNel))
+    
+    def put(r: Request[Stream], t: T): T = get(r).success | t
+  }
 }
 
 trait Postable[T] {
@@ -22,8 +27,15 @@ trait Postable[T] {
 object Postable {
   def postable[T](f: String => Option[T]) = new Postable[T] { def read(str: String) = f(str) }
   
-  implicit val string = postable[String](s => some(s))
-  implicit val int = postable[Int](s => s.parseInt.success)
+  implicit val string = postable[String](some _)
+  implicit val int = postable[Int](_.parseInt.success)
+  implicit val long = postable[Long](_.parseLong.success)
+  implicit val double = postable[Double](_.parseDouble.success)
+  
+  def test {
+    import StringW._
+    case class Foo(bar: String, baz: String)
+  }
 }
 
 object StringW {

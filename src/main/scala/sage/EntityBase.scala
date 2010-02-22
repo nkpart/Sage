@@ -8,7 +8,7 @@ import scala.collection.JavaConversions._
 
 trait EntityBase[T] {
   val kind: String
-  def * : Property[Entity, T]
+  def * : ReadWrite[Entity, T]
   
   def <<(t: T)(implicit ds: DatastoreService): Keyed[T] = {
     val e = freshEntity(t)

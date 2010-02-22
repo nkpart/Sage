@@ -15,29 +15,41 @@ class RequestSpec extends SageSuiteBase {
   import request._
   import StringW._
   
-  def buildRequest(qs: String) = {
+  def r(qs: String) = {
     val line = Line.line(GET, Uri.uri("/abc".charsNel.get, some(qs.toList)), Version.version11)    
     Request.request(line, Nil, Stream.empty)
   }
   
   case class Name(name: String)
-  test("a") {
-    val nameProp = hlift("name".as[String]) >< (Name <-> Name.unapply _)
-    val nameAndAgeProp = "name".as[String] :: "age".as[String] :: "song".as[String]
-    
-    val request = buildRequest("name=nick")
-    
-    nameProp.get(request).success.map(_.name) should equal (some("nick"))
+  case class Person(name: String, age: Int)
+  case class Record(name: String, age: String, song: String)
+  
+  val personProp = "name".as[String] :: "age".as[Int] >< (Person <-> Person.unapply _)
+  val nameProp = "name".as[String].hlift >< (Name <-> Name.unapply _)
+  val nameAndAgeProp = "name".as[String] :: "age".as[String] :: "song".as[String] >< (Record <-> Record.unapply _)
+  
+  test("reading") {    
+    val request = r("name=nick")
+    nameProp.get(request).success should equal (some(Name("nick")))
+  }
+  test ("missing") {
+    val request = r("name=nick")
     nameAndAgeProp.get(request).failure.map(_.list) should equal (some(Missing("age") :: Missing("song") :: Nil))
   }
   
-  test("missing vs. invalid data") {
-    val nameAndAgeProp = "name".as[String] :: "age".as[Int]
+  test ("invalid") {
+    // TODO
+    val request = r("name=nick&age=five")
+    personProp.get(request).failure.map(_.list) should equal {
+      some(Invalid("age") :: Nil)
+    }
+  }
+  
+  test("updating") {
+    val start = Record("nick", "four", "song1")
     
-    val nameOnly = buildRequest("name=nick")
-    val invalidAge = buildRequest("name=nick&age=five")
-    
-    // Values can be missing, or they can be unparsable.
-    
+    nameAndAgeProp.put(r("song=song2"), start) should equal {
+      Record("nick", "four", "song2")
+    }
   }
 }
