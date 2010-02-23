@@ -15,11 +15,11 @@ case class Invalid(property: String) extends PropertyError
 
 trait AttrReader[Src, T] {
   // Failure cases must report a missing property/field name
-  def get(e: Src): Validation[NonEmptyList[PropertyError], T]
+  def get(e: Src): Result[T]
 }
 
 trait AttrWriter[Src, T] {
-  def put(t: T, e: Src): Src
+  def put(t: T, e: Src): Result[Src]
 }
 
 // Represents getting a value that can be read from, and written to, a source type.
@@ -33,7 +33,7 @@ trait ReadWrite[Src, T] extends AttrReader[Src,T] with AttrWriter[Src, T] {
 }
 
 object ReadWrite {
-  def apply[Src, T](getF: Src => Validation[NonEmptyList[PropertyError], T], putF: (T, Src) => Src) = new ReadWrite[Src, T] {
+  def apply[Src, T](getF: Src => Result[T], putF: (T, Src) => Result[Src]) = new ReadWrite[Src, T] {
     def get(e: Src) = getF(e)
     def put(t: T, e: Src) = putF(t, e)
   }

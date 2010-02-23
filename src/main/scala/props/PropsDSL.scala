@@ -12,7 +12,9 @@ trait PropsDSL {
   implicit def pimpPropListThing[Src, L <: HList](p: ReadWrite[Src, L]) = new {
     def ::[V](property: ReadWrite[Src, V]): ReadWrite[Src, HCons[V, L]] = ReadWrite[Src, HCons[V, L]](
       e => (property.get(e) <|*|> p.get(e)) map { case (v, xs) => HCons(v, xs) },
-      (vls, e) => property.put(vls.head, p.put(vls.tail, e))
+      (vls, e) => { 
+        p.put(vls.tail, e) >>= (x => property.put(vls.head, x))
+      }
     )
   }
   
@@ -29,7 +31,7 @@ trait PropsDSL {
       def put(s: Src, vls: HCons[V, L]) = {
         val ell = p.put(s, vls.tail)
         val v = property.put(s, vls.head)
-        HCons(v, ell)
+        (v <|*|> ell) map { case (v, ell) => HCons(v, ell) }
       }
     }
   }

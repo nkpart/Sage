@@ -42,7 +42,7 @@ trait EntityBase[T] {
   
   def find: Find[T] = Find(this)
   
-  def write(t: T, e: Entity): Entity = this.* put (t, e)
+  def write(t: T, e: Entity): Entity = this.*.put(t, e).success.get
   def read(m: Entity): Option[T] = this.*.get(m).success
   
   def keyedEntity(t: T, key: Key): Entity = write(t, new Entity(key))

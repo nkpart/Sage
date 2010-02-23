@@ -16,7 +16,10 @@ trait StringW {
   def as[T](implicit p: Postable[T]) = new ReadUpdate[Request[Stream], T] {
     def get(r: Request[Stream]) = (r |! str).map(_.mkString).toSuccess(missing(str).wrapNel) >>= (v => p.read(v).toSuccess(invalid(str).wrapNel))
     
-    def put(r: Request[Stream], t: T): T = get(r).success | t
+    def put(r: Request[Stream], t: T) = get(r).fail.map(_.list) >>= {
+      case Missing(_) :: Nil => success(t).fail
+      case a => failure(a.toNel.get).fail
+    } validation
   }
 }
 

@@ -19,7 +19,7 @@ trait Instances {
       def xmap[T, U](prop: ReadUpdate[Src, T], f: T => U, g: U => T): ReadUpdate[Src, U] = new ReadUpdate[Src, U] {
         def get(s: Src) = prop.get(s) map f
 
-        def put(s: Src, u: U): U = f(prop.put(s, g(u)))
+        def put(s: Src, u: U): Result[U] = prop.put(s, g(u)) map f
       }
     }
   
@@ -31,7 +31,7 @@ trait Instances {
   
   implicit def AttrWriterCofunctor[Src] = new scalaz.Cofunctor[PartialApply1Of2[AttrWriter, Src]#Apply] {
     def comap[A,B](writer: AttrWriter[Src, A], f: B => A) = new AttrWriter[Src, B] {
-      def put(b: B, s: Src): Src = writer.put(f(b), s)
+      def put(b: B, s: Src) = writer.put(f(b), s)
     }
   }
 }

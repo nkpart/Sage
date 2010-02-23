@@ -28,10 +28,11 @@ class RequestSpec extends SageSuiteBase {
   val nameProp = "name".as[String].hlift >< (Name <-> Name.unapply _)
   val nameAndAgeProp = "name".as[String] :: "age".as[String] :: "song".as[String] >< (Record <-> Record.unapply _)
   
-  test("reading") {    
+  test("reading") {
     val request = r("name=nick")
     nameProp.get(request).success should equal (some(Name("nick")))
   }
+  
   test ("missing") {
     val request = r("name=nick")
     nameAndAgeProp.get(request).failure.map(_.list) should equal (some(Missing("age") :: Missing("song") :: Nil))
@@ -49,7 +50,18 @@ class RequestSpec extends SageSuiteBase {
     val start = Record("nick", "four", "song1")
     
     nameAndAgeProp.put(r("song=song2"), start) should equal {
-      Record("nick", "four", "song2")
+      success(Record("nick", "four", "song2"))
+    }
+  }
+  
+  case class Rect(x: Int, y: Int, width: Int, height: Int)
+  val RectProp = "x".as[Int] :: "y".as[Int] :: "width".as[Int] :: "height".as[Int] >< (Rect <-> Rect.unapply _)
+  
+  test("updating invalid") {
+    val start = Rect(0, 0, 25, 25)
+    
+    RectProp.put(r("width=fifteen&height=eighteen"), start).fail.map(_.list).validation should equal {
+      failure(Invalid("width") :: Invalid("height") :: Nil)
     }
   }
 }

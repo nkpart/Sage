@@ -11,7 +11,7 @@ object EntityPropBuilders {
     
     def put(t: T, e: Entity) = {
       e.setProperty(s, t)
-      e
+      success(e)
     }
   }
   
