@@ -12,12 +12,10 @@ class SageProject(info: ProjectInfo) extends DefaultProject(info) {
   val scalatest = "org.scalatest" % "scalatest" % "1.0.1-for-scala-2.8.0.Beta1-RC7-with-test-interfaces-0.3-SNAPSHOT" % "test"
   
   // TODO Enable when it gets in the main maven repo
-//  val appengine = "com.google.appengine" % "appengine-api-1.0-sdk" % "1.3.0" % "compile"
+  //  val appengine = "com.google.appengine" % "appengine-api-1.0-sdk" % "1.3.0" % "compile"
 
-  val metascala = "metascala" %% "metascala" % "0.1"
+  val metascala = "metascala" %% "metascala" % "0.1"  
+  val hprops = "nkpart" %% "hprops" % "0.1"
   
   val scalaz_core = "com.googlecode.scalaz" % "scalaz-core_2.8.0.Beta1" % "5.0-SNAPSHOT"
-  val scalaz_http = "com.googlecode.scalaz" % "scalaz-http_2.8.0.Beta1" % "5.0-SNAPSHOT"
-  
-  val hprops = "nkpart" %% "hprops" % "0.1"
 }
