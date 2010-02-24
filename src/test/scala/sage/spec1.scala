@@ -5,7 +5,7 @@ import metascala.HLists._
 import scalaz._
 import Scalaz._
 
-import props._
+import hprops._
 import org.scalatest._
 import org.scalatest.matchers.ShouldMatchers
 

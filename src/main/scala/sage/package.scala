@@ -1,7 +1,7 @@
 import sage.EntityImplicits
 import scalaz._
 import Scalaz._
-import props._
+import hprops._
 
 import metascala.HLists._
 
@@ -10,4 +10,4 @@ package object sage extends
   with FunctionWs 
   with FindDSLImplicits 
   with EntityProperties 
-  with PropsDSL 
+  with HPropsDSL 

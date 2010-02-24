@@ -1,7 +1,7 @@
 package sage
 package http
 
-import props._
+import hprops._
 import scalaz.http.request._
 import scalaz._
 import Scalaz._
@@ -11,7 +11,7 @@ import metascala.HLists._
 trait StringW {
   val str: String
   
-  import props._
+  import hprops._
   
   def as[T](implicit p: Postable[T]) = new ReadUpdate[Request[Stream], T] {
     def get(r: Request[Stream]) = (r |! str).map(_.mkString).toSuccess(missing(str).wrapNel) >>= (v => p.read(v).toSuccess(invalid(str).wrapNel))

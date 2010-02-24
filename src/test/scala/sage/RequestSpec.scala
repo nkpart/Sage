@@ -2,7 +2,7 @@ package sage
 
 import metascala.HLists._
 
-import props._
+import hprops._
 import scalaz._
 import Scalaz._
 

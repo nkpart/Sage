@@ -1,6 +1,6 @@
 package sage
 
-import props._
+import hprops._
 import scalaz._
 import Scalaz._
 import org.scalatest._
