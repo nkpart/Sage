@@ -8,8 +8,6 @@ Sage is a scala API for manipulating the App Engine datastore. Is it *heavily* i
 Declaring Models
 ----------------
 
-Sage uses case classes as Models. The data types are dumb, and are managed in the datasource through an object.
-
         import sage._
         
         import java.lang.{Long => JLong} 
@@ -21,9 +19,9 @@ Sage uses case classes as Models. The data types are dumb, and are managed in th
           def * =  "type".typedProp(Name) :: "price".prop[JLong]  >< (Hat <-> Hat.unapply _)
         }
         
-Let's go through that. We define our data type, adding a NewType for Name.
+Let's go through that. We define our data type, Hat, using a NewType for the name property (types ftw).
 
-We define a subclass of Base, declaring the datastore *kind* of the object.
+To use that as an entity in the datastore, we need a subclass of `Base`, declaring the datastore *kind* of the object.
 
 The method `*` declares how the case class is read and stored within an entity. The order of the properties must match the order of the arguments to the constructor - an incorrect order will lead to a failure at compile time. You build a heterogenous list of properties, then use >< to pass in a function from that list of properties to your case class, and the reverse. "Hat <-> Hat.unapply _" is the most convenient way of declaring this pair of functions.
 
