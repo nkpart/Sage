@@ -14,10 +14,10 @@ class PropertySuite extends SageSuiteBase {
     val abProp = "a".prop[String] :: "b".prop[String] 
     
     val e = new Entity("some_kind")
-    abProp.get(e).failure.map(_.list) should equal (some(missing("a") :: missing("b") :: nil))
+    abProp.read(e).fail.toOption.map(_.list) should equal (some(missing("a") :: missing("b") :: nil))
   
     e.setProperty("a", "aValue")
-    abProp.get(e).failure.map(_.list) should equal (some(missing("b") :: Nil))
+    abProp.read(e).fail.toOption.map(_.list) should equal (some(missing("b") :: Nil))
   }
   
   test("properties type check") {
@@ -25,9 +25,9 @@ class PropertySuite extends SageSuiteBase {
     val e = new Entity("someKind")
     
     e.setProperty("a", 50l)
-    abProp.get(e).failure.map(_.list) should equal (some((missing("a") :: Nil)))
+    abProp.read(e).fail.toOption.map(_.list) should equal (some((missing("a") :: Nil)))
     
     e.setProperty("a", "value")
-    abProp.get(e).failure should equal (none)
+    abProp.read(e).fail.toOption should equal (none)
   }
 }

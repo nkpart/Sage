@@ -32,7 +32,7 @@ trait EntityBase[T] {
   }
   
   def lookup(id: Long)(implicit ds: DatastoreService): Option[Keyed[T]] = {
-    val got = (() => ds.get(KeyFactory.createKey(kind, id))).throws.success
+    val got = (() => ds.get(KeyFactory.createKey(kind, id))).throws.toOption
     for (entity <- got; t <- read(entity)) yield (Keyed(entity.getKey, t))
   }
   
@@ -42,12 +42,12 @@ trait EntityBase[T] {
   
   def find: Find[T] = Find(this)
   
-  def write(t: T, e: Entity): Entity = this.*.put(t, e).success.get
-  def read(m: Entity): Option[T] = this.*.get(m).success
+  def write(t: T, e: Entity): Entity = this.*.put(t, e).toOption.get
+  def read(m: Entity): Option[T] = this.*.read(m).toOption
   
-  def keyedEntity(t: T, key: Key): Entity = write(t, new Entity(key))
-  def freshEntity(t: T) = write(t, new Entity(kind))  
-  def parentedEntity(t: T, parentKey: Key) = write(t, new Entity(kind, parentKey))  
+  private def keyedEntity(t: T, key: Key): Entity = write(t, new Entity(key))
+  private def freshEntity(t: T) = write(t, new Entity(kind))  
+  private def parentedEntity(t: T, parentKey: Key) = write(t, new Entity(kind, parentKey))  
 }
 
 abstract class Base[T](val kind: String) extends EntityBase[T]

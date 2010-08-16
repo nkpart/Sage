@@ -7,7 +7,7 @@ import com.google.appengine.api.datastore._
 
 object EntityPropBuilders {
   def string[T : ClassManifest](s: String): ReadWrite[Entity, T] = new ReadWrite[Entity, T] {
-    def get(e: Entity) = e.property[T](s).toSuccess(missing(s).wrapNel)
+    def read(e: Entity) = e.property[T](s).toSuccess(missing(s).wrapNel)
     
     def put(t: T, e: Entity) = {
       e.setProperty(s, t)
