@@ -4,3 +4,4 @@ target
 project/boot
 lib_managed
 WEB-INF
+.idea/workspace.xml
