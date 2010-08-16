@@ -12,4 +12,8 @@ class SageProject(info: ProjectInfo) extends DefaultProject(info) {
   val hprops = "nkpart" %% "hprops" % "0.1"
   
   val scalaz_core = "com.googlecode.scalaz" %% "scalaz-core" % "5.0"
+  
+  override def packageSrcJar= defaultJarPath("-sources.jar")
+  val sourceArtifact = Artifact.sources(artifactID)
+  override def packageToPublishActions = super.packageToPublishActions ++ Seq(packageSrc)
 }

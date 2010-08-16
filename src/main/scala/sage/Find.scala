@@ -4,6 +4,8 @@ import com.google.appengine.api.datastore._
 import scalaz._
 import Scalaz._
 
+import scala.collection.JavaConversions._
+
 case class Find[T](base: EntityBase[T], q: Query, fo: FetchOptions) {  
   def query(f: Query => Query): Find[T] = this copy (q = f(q))
 
